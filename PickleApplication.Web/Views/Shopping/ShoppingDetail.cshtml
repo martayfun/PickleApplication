@@ -1,0 +1,100 @@
+﻿@model PickleApplication.BusinessLayer.Models.Order
+@{
+    ViewBag.Title = "Sipariş Detayları";
+    decimal totalPrice = 0;
+}
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0"><a href="@Url.Action("Index","Home")">Anasayfa</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Sipariş Detayı</strong></div>
+        </div>
+    </div>
+</div>
+
+<div class="site-section" data-ui-id="ShoppingDetail">
+    <div class="container">
+        @if (Model.OrderLines != null && Model.OrderLines.Count() > 0)
+        {
+            using (Html.BeginForm("ShoppingDetail", "Shopping", FormMethod.Post))
+            {
+                //OrderLines
+                <div class="card">
+                    <div class="card-header">Sipariş Bilgileri</div>
+                    <div class="card-body">
+                        @foreach (var orderLine in Model.OrderLines)
+                        {
+                            totalPrice += orderLine.Product.UnitPrice * orderLine.Quantity;
+                            <p class="card-text"><b>Ürün: </b>@orderLine.Product.ProductName</p>
+                            <p class="card-text"><b>Miktar: </b>@orderLine.Quantity Litre</p>
+                        }
+                        <p class="card-text"><b>Toplam Fiyat: </b>@totalPrice ₺</p>
+                    </div>
+                </div>
+                //Customer
+                <div class="card">
+                    <div class="card-header">Alıcı Adres Bilgileri</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            @Html.TextBoxFor(c => c.Customer.CustomerName, new { @class = "form-control", placeholder = "Adınız" })
+                            @Html.ValidationMessageFor(c => c.Customer.CustomerName)
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(c => c.Customer.CustomerSurname, new { @class = "form-control", placeholder = "Soyadınız" })
+                            @Html.ValidationMessageFor(c => c.Customer.CustomerSurname)
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(c => c.Customer.CompanyPhone, new { @class = "form-control", placeholder = "Şirket Numarası" })
+                            @Html.ValidationMessageFor(c => c.Customer.CompanyPhone)
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(c => c.Customer.MobilePhone, new { @class = "form-control", placeholder = "Cep Numarası" })
+                            @Html.ValidationMessageFor(c => c.Customer.MobilePhone)
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(c => c.Customer.Mail, new { @class = "form-control", placeholder = "E-Posta" })
+                            @Html.ValidationMessageFor(c => c.Customer.Mail)
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(c => c.Customer.PostalCode, new { @class = "form-control", placeholder = "Posta Kodu" })
+                            @Html.ValidationMessageFor(c => c.Customer.PostalCode)
+                        </div>
+                    </div>
+                </div>
+                //DeliveryInfo
+                <div class="card">
+                    <div class="card-header">Alıcı Adres Bilgileri</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Ülke</label>
+                            @Html.DropDownListFor(m => m.DeliveryInfo.Region.City.Country.CountryId, new SelectList(ViewBag.Countries, "Key", "Value"), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.DeliveryInfo.Region.City.Country.CountryId)
+                        </div>
+                        <div class="form-group">
+                            <label>Şehir</label>
+                            @Html.DropDownListFor(m => m.DeliveryInfo.Region.City.CityId, new SelectList(ViewBag.Cities, "Key", "Value"), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.DeliveryInfo.Region.City.CityId)
+                        </div>
+                        <div class="form-group">
+                            <label>Bölge</label>
+                            @Html.DropDownListFor(m => m.DeliveryInfo.Region.RegionId, new SelectList(ViewBag.Regions, "Key", "Value"), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.DeliveryInfo.Region.RegionId)
+                        </div>
+                        <div class="form-group">
+                            <label>Adres</label>
+                            @Html.TextAreaFor(c => c.DeliveryInfo.Address, new { @class = "form-control", rows = 2 })
+                            @Html.ValidationMessageFor(c => c.DeliveryInfo.Address)
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-primary btn-lg py-3 mt-4 mb-4 float-right" value="Siparişi Tamamla" />
+            }
+        }
+        else
+        {
+            <div class="alert alert-primary">
+                <strong>Uyarı!</strong> Ürün bilgisi bulunamadığı için işleme devam edemiyoruz.
+            </div>
+        }
+    </div>
+</div>

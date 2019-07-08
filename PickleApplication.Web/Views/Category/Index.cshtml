@@ -1,0 +1,10 @@
+﻿@model IEnumerable<PickleApplication.BusinessLayer.Models.Product>
+@{
+    ViewBag.Title = "Kategoriler";
+}
+
+@foreach (var product in Model)
+{
+    <p>@product.ProductName</p>
+    <p>@product.UnitPrice</p>
+}

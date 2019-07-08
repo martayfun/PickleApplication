@@ -1,0 +1,103 @@
+﻿@model PickleApplication.BusinessLayer.Models.Product
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Serialization;
+@{
+    ViewBag.Title = Model != null ? Model.Title : "Hata";
+
+    #region SetPicture
+    IEnumerable<PickleApplication.BusinessLayer.Models.Picture> Pictures = (IEnumerable<PickleApplication.BusinessLayer.Models.Picture>)ViewData["Pictures"];
+    #endregion
+
+    #region SetJsModel
+    var product = "null";
+    var jPicture = "null";
+
+    if (Model != null && Model.ProductId > 0)
+    {
+        product = JsonConvert.SerializeObject(Model, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+    }
+    if (Pictures != null && Pictures.Count() > 0)
+    {
+        jPicture = JsonConvert.SerializeObject(Pictures.FirstOrDefault(), new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+    }
+
+    #endregion
+}
+
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0"><a href="@Url.Action("Index", "Home")">Anasayfa</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">@(Model != null && Model.ProductId > 0 ? Model.ProductName : "Bulunamadı!")</strong></div>
+        </div>
+    </div>
+</div>
+
+<div class="site-section" ng-controller="ProductDetailContainer" data-ui-id="ProductDetail">
+    <div class="container">
+        @if (Model != null && Model.ProductId > 0)
+        {
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="owl-carousel owl-theme">
+                        @if (Pictures.Count() > 0)
+                        {
+                            foreach (var picture in Pictures)
+                            {
+                                <div class="item">
+                                    <img src="~/Content/Pictures/@(string.Format("{0}{1}", picture.PictureId, picture.Extension))?width=1000&height=1000&mode=crop" class="img-responsive" />
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="item">
+                                <img src="~/Content/shoppers/images/default.jpg?width=1000&height=1000&mode=crop" class="img-responsive" />
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h2 class="text-black">@Model.ProductName</h2>
+                    <p>@Model.Description</p>
+                    <p><strong class="text-primary h4"><span data-ui-id="BasePrice" data-ui-price="@Model.UnitPrice">@Model.UnitPrice</span> ₺</strong></p>
+                    <div class="mb-1 d-flex">
+                        <label for="option-sm" class="d-flex mr-3 mb-3">
+                            <span class="d-inline-block text-black">Birim Litre Fiyatı</span>
+                        </label>
+                    </div>
+                    <div class="mb-5">
+                        <div class="input-group mb-3" style="max-width: 120px;">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary js-btn-minus" type="button" ng-click="productQuantityExtractionOne()">&minus;</button>
+                            </div>
+                            <input type="text" class="form-control text-center" ng-minlength="0" ng-maxlength="200" ng-model="ProductQuantity" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary js-btn-plus" type="button" ng-click="productQuantityAddingOne()">&plus;</button>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="" class="buy-now btn btn-sm btn-primary" ng-click="btnAddProduct()">Sepete Ekle</a></p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-primary">Ürün görüntülenirken bir sorun oluştu.</div>
+        }
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/shoppers/app/ProductDetail.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            ProductDetail.init();
+            ProductDetail.Prm.Product = JSON.parse('@Html.Raw(product)');
+            ProductDetail.Prm.Picture = JSON.parse('@Html.Raw(jPicture)');
+        });
+        $(document).ready(function () {
+            ProductDetail.load();
+        });
+    </script>
+}

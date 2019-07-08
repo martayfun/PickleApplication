@@ -1,0 +1,66 @@
+﻿@model IEnumerable<PickleApplication.BusinessLayer.Models.Region>
+
+
+@{
+    ViewBag.Title = "All";
+}
+
+@if (ViewBag.DeleteStatus != null)
+{
+    <div class="alert alert-@(ViewBag.DeleteStatus ? "success" : "danger") alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa @(ViewBag.DeleteStatus ? "fa-check" : "fa-ban")"></i> @(ViewBag.DeleteStatus ? "Başarılı" : "Hata!")</h4>
+        @(ViewBag.DeleteStatus ? "Bölge silme işlemi başarılı bir şekilde gerçekleşmiştir." : "Bölge silme sırasında bir hata oluştu!")
+    </div>
+}
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Bölgeler</h3>
+                    <div class="box-tools pull-right">
+                        <a href="@Url.Action("Modify","Region")" class="btn btn-info"><i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Bölge</th>
+                                <th>Şehir</th>
+                                <th>Ülke</th>
+                                <th>Düzenle</th>
+                                <th>Sil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var region in Model)
+                            {
+                                <tr>
+                                    <td>@region.RegionName</td>
+                                    <td>@region.City.CityName</td>
+                                    <td>@region.City.Country.CountryName</td>
+                                    <td><a href="@Url.Action("Modify","Region", new { id = region.RegionId })" class="btn btn-info"><i class="fa fa-edit"></i></a></td>
+                                    <td><a href="@Url.Action("Delete","Region", new { id = region.RegionId })" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('#example1').DataTable();
+        });
+    </script>
+}

@@ -1,0 +1,88 @@
+﻿@model IEnumerable<PickleApplication.BusinessLayer.Models.Picture>
+@{
+    ViewBag.Title = "Picture";
+    TempData["ProductId"] = Url.RequestContext.RouteData.Values["id"];
+}
+
+<!-- Main content -->
+<section class="picture">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Ürünler</h3>
+                    <div class="box-tools pull-right">
+
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    @using (Html.BeginForm("CreatePicture", "AdmProduct", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="input-group">
+                            <label class="input-group-btn">
+                                <span class="btn btn-primary">
+                                    Browse&hellip; <input type="file" name="file" style="display: none;" multiple>
+                                </span>
+                            </label>
+                            <input type="text" class="form-control" readonly>
+                        </div>
+                        <div class="input-group">
+                            <input type="submit" class="btn btn-primary" value="Kaydet" />
+                        </div>
+                    }
+                    <div class="row">
+                        @foreach (var picture in Model)
+                        {
+                            <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                                <div class="thumbnail">
+                                    <img class="img-thumbnail"
+                                         src="~/Content/Pictures/@string.Format("{0}{1}?w=350&h=350&mode=stretch&quality=75", picture.PictureId, picture.Extension)"
+                                         alt="Another alt text">
+                                    <div class="caption">
+                                        <p><a href="@Url.Action("DeletePictureById","AdmProduct", new { Id = picture.PictureId })" class="btn btn-xs btn-danger" role="button"><i class="fa fa-trash"></i></a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+
+            // We can attach the `fileselect` event to all file inputs on the page
+            $(document).on('change', ':file', function () {
+                var input = $(this),
+                    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                input.trigger('fileselect', [numFiles, label]);
+            });
+
+            // We can watch for our custom `fileselect` event like this
+            $(document).ready(function () {
+                $(':file').on('fileselect', function (event, numFiles, label) {
+
+                    var input = $(this).parents('.input-group').find(':text'),
+                        log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                    if (input.length) {
+                        input.val(log);
+                    } else {
+                        if (log) alert(log);
+                    }
+
+                });
+            });
+
+        });
+    </script>
+}

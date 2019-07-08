@@ -1,0 +1,210 @@
+﻿@model IEnumerable<PickleApplication.BusinessLayer.Models.Order>
+@using PickleApplication.BusinessLayer.Utils;
+@{
+    ViewBag.Title = "All";
+}
+
+@if (ViewBag.Approval != null)
+{
+    <div class="alert alert-@(ViewBag.Approval ? "success" : "danger") alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa @(ViewBag.Approval ? "fa-check" : "fa-ban")"></i> @(ViewBag.Approval ? "Başarılı" : "Hata!")</h4>
+        @(ViewBag.Approval ? "Sipariş başarılı bir şekilde onaylanmıştır." : "sipariş onaylama sırasında bir hata oluştu!")
+    </div>
+}
+
+@if (ViewBag.Cancel != null)
+{
+    <div class="alert alert-@(ViewBag.Cancel ? "success" : "danger") alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa @(ViewBag.Cancel ? "fa-check" : "fa-ban")"></i> @(ViewBag.Cancel ? "Başarılı" : "Hata!")</h4>
+        @(ViewBag.Cancel ? "Sipariş başarılı bir şekilde iptal edildi." : "Sipariş iptal etme sırasında bir hata oluştu!")
+    </div>
+}
+
+<section class="content" data-ui-id="AdminOrder" ng-controller="AdminOrderContainer">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs pull-right">
+                    <li><a href="#cancel" data-toggle="tab">İptal edilen</a></li>
+                    <li><a href="#approval" data-toggle="tab">Onaylanan</a></li>
+                    <li class="active"><a href="#pending" data-toggle="tab">Beklemede</a></li>
+                    <li class="pull-left header"><i class="fa fa-th"></i> Siparişler</li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane" id="cancel">
+                        <table id="tblCancel" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Ad Soyad</th>
+                                    <th>Cep Telefon</th>
+                                    <th>İş Telefon</th>
+                                    <th>Şehir</th>
+                                    <th>Bölge</th>
+                                    <th>Sipariş Adeti</th>
+                                    <th>Toplam Fiyat</th>
+                                    <th>Sipariş Durumu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model.Where(o => o.Status == PickleApplication.BusinessLayer.Models.OrderStatus.Cancel))
+                                {
+                                    <tr>
+                                        <td>@order.Customer.CustomerName @order.Customer.CustomerSurname</td>
+                                        <td>@order.Customer.MobilePhone</td>
+                                        <td>@order.Customer.CompanyPhone</td>
+                                        <td>@order.DeliveryInfo.Region.City.CityName</td>
+                                        <td>@order.DeliveryInfo.Region.RegionName</td>
+                                        <td>@order.OrderLineCount</td>
+                                        <td>@order.TotalPrice</td>
+                                        <td>
+                                            @switch (order.Status)
+                                            {
+                                                case PickleApplication.BusinessLayer.Models.OrderStatus.Approval:
+                                                    <span class="label label-success">Onaylandı</span>
+                                                    break;
+                                                case PickleApplication.BusinessLayer.Models.OrderStatus.Cancel:
+                                                    <span class="label label-danger">İptal Edildi</span>
+                                                    break;
+                                                case PickleApplication.BusinessLayer.Models.OrderStatus.Pending:
+                                                    <span class="label label-warning">Beklemede</span>
+                                                    break;
+                                                default:
+                                                    <span class="label label-primary">Bilinmiyor</span>
+                                                    break;
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.tab-pane -->
+                    <div class="tab-pane" id="approval">
+                        <table id="tblApproval" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Ad Soyad</th>
+                                    <th>Cep Telefon</th>
+                                    <th>İş Telefon</th>
+                                    <th>Şehir</th>
+                                    <th>Bölge</th>
+                                    <th>Sipariş Adeti</th>
+                                    <th>Toplam Fiyat</th>
+                                    <th>Sipariş Durumu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model.Where(o => o.Status == PickleApplication.BusinessLayer.Models.OrderStatus.Approval))
+                                {
+                                    <tr>
+                                        <td>@order.Customer.CustomerName @order.Customer.CustomerSurname</td>
+                                        <td>@order.Customer.MobilePhone</td>
+                                        <td>@order.Customer.CompanyPhone</td>
+                                        <td>@order.DeliveryInfo.Region.City.CityName</td>
+                                        <td>@order.DeliveryInfo.Region.RegionName</td>
+                                        <td>@order.OrderLineCount</td>
+                                        <td>@order.TotalPrice</td>
+                                        <td>
+                                            @switch (order.Status)
+                                            {
+                                                case PickleApplication.BusinessLayer.Models.OrderStatus.Approval:
+                                                    <span class="label label-success">Onaylandı</span>
+                                                    break;
+                                                case PickleApplication.BusinessLayer.Models.OrderStatus.Cancel:
+                                                    <span class="label label-danger">İptal Edildi</span>
+                                                    break;
+                                                case PickleApplication.BusinessLayer.Models.OrderStatus.Pending:
+                                                    <span class="label label-warning">Beklemede</span>
+                                                    break;
+                                                default:
+                                                    <span class="label label-primary">Bilinmiyor</span>
+                                                    break;
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.tab-pane -->
+                    <div class="tab-pane active" id="pending">
+                        <table id="tblPending" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Ad Soyad</th>
+                                    <th>Cep Telefon</th>
+                                    <th>İş Telefon</th>
+                                    <th>Şehir</th>
+                                    <th>Bölge</th>
+                                    <th>Sipariş Adeti</th>
+                                    <th>Toplam Fiyat</th>
+                                    <th>Sipariş Durumu</th>
+                                    <th>Onay</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model.Where(o => o.Status == PickleApplication.BusinessLayer.Models.OrderStatus.Pending))
+                                {
+                                    <tr>
+                                        <td>@order.Customer.CustomerName @order.Customer.CustomerSurname</td>
+                                        <td>@order.Customer.MobilePhone</td>
+                                        <td>@order.Customer.CompanyPhone</td>
+                                        <td>@order.DeliveryInfo.Region.City.CityName</td>
+                                        <td>@order.DeliveryInfo.Region.RegionName</td>
+                                        <td>@order.OrderLineCount</td>
+                                        <td>@order.TotalPrice</td>
+                                        <td>
+                                            @switch (order.Status)
+                                            {
+                                                case PickleApplication.BusinessLayer.Models.OrderStatus.Approval:
+                                                    <span class="label label-success">Onaylandı</span>
+                                                    break;
+                                                case PickleApplication.BusinessLayer.Models.OrderStatus.Cancel:
+                                                    <span class="label label-danger">İptal Edildi</span>
+                                                    break;
+                                                case PickleApplication.BusinessLayer.Models.OrderStatus.Pending:
+                                                    <span class="label label-warning">Beklemede</span>
+                                                    break;
+                                                default:
+                                                    <span class="label label-primary">Bilinmiyor</span>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="@Url.Action("Approval","Order", new { Id = order.OrderId })" class="btn btn-xs btn-success">Onaylıyorum</a>
+                                                <a href="@Url.Action("Cancel","Order", new { Id = order.OrderId })" class="btn btn-xs btn-danger">Onaylamıyorum</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+            </div>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <script src="~/Scripts/shoppers/lodash.js"></script>
+    <script src="~/Scripts/shoppers/app/Common.js"></script>
+    <script src="~/Areas/Admin/Scripts/app/AdminOrder.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            AdminOrder.init();
+            $(AdminOrder.Prm.Obj.AdminOrderContainer).find('#tblCancel').DataTable();
+            $(AdminOrder.Prm.Obj.AdminOrderContainer).find('#tblApproval').DataTable();
+            $(AdminOrder.Prm.Obj.AdminOrderContainer).find('#tblPending').DataTable();
+        });
+        $(window).ready(function () {
+            AdminOrder.load();
+            var scope = AdminOrder.Prm.scope;
+            scope.Orders = JSON.parse('@Html.Raw(Common.FromObjectWithCamelCasePropertyNames(Model))');
+        });
+    </script>
+}

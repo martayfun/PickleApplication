@@ -1,0 +1,58 @@
+﻿@model PickleApplication.BusinessLayer.Models.City
+@{
+    ViewBag.Title = "Modify";
+}
+
+<section class="content">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title">@(Model != null && Model.CityId > 0 ? "Şehir Güncelle" : "Şehir Ekle")</h3>
+        </div>
+        @using (Html.BeginForm("Modify", "City", FormMethod.Post))
+        {
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        @if (Model != null && Model.CityId > 0)
+                        {
+                            @Html.HiddenFor(c => c.CityId)
+                        }
+
+                        @Html.HiddenFor(c => c.Country.CountryName)
+                        <div class="form-group">
+                            <label>Ülke</label>
+                            @Html.DropDownListFor(c => c.Country.CountryId, new SelectList(ViewBag.Countries, "Key", "Value"), "Ülke Seç", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(c => c.Country.CountryId)
+                        </div>
+                        <div class="form-group">
+                            <label>Şehir</label>
+                            @Html.TextBoxFor(c => c.CityName, new { @class = "form-control", type = "text" })
+                            @Html.ValidationMessageFor(c => c.CityName)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <input type="submit" class="btn btn-primary" value="@(Model != null && Model.CityId > 0 ? "Güncelle" : "Ekle")" />
+            </div>
+        }
+    </div>
+</section>
+
+@if (ViewBag.CreateStatus != null)
+{
+    <div class="alert alert-@(ViewBag.CreateStatus ? "success" : "danger") alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa @(ViewBag.CreateStatus ? "fa-check" : "fa-ban")"></i> @(ViewBag.CreateStatus ? "Başarılı" : "Hata!")</h4>
+        @(ViewBag.CreateStatus ? "Şehir oluşturma işlemi başarılı bir şekilde gerçekleşmiştir." : "Şehir oluşturma sırasında bir hata oluştu.")
+    </div>
+}
+
+@if (ViewBag.UpdateStatus != null)
+{
+    <div class="alert alert-@(ViewBag.UpdateStatus ? "success" : "danger") alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa @(ViewBag.CreateStatus ? "fa-check" : "fa-ban")"></i> @(ViewBag.UpdateStatus ? "Başarılı" : "Hata!")</h4>
+        @(ViewBag.UpdateStatus ? "Şehir güncelleme işlemi başarılı bir şekilde gerçekleşmiştir." : "Şehir güncelleme sırasında bir hata oluştu.")
+    </div>
+}

@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Sipariş Sonucu";
+}
+
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0"><a href="@Url.Action("Index","Home")">Anasayfa</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Sipariş Durumu</strong></div>
+        </div>
+    </div>
+</div> 
+
+<div class="site-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <span class="icon-check_circle display-3 text-success"></span>
+                <h2 class="display-3 text-black">Teşekkürler!</h2>
+                <p class="lead">Siparişiniz alınmıştır. En kısa sürede sizinle irtibata geçeceğiz.</p>
+                <p class="lead">Mail adresinize sipariş detayları gönderilmiştir.</p>
+                @*<p class="lead mb-5">@Model.OrderCode sipariş numarası ile siparişinizin durumunu kontrol edebilirsiniz.</p>*@
+                <p class="lead mb-5">Lütfen Sipariş numaranızı kaybetmeyiniz!</p>
+                <p><a href="@Url.Action("ProductList","Product")" class="btn btn-sm btn-primary">Alışverişe devam et</a></p>
+            </div>
+        </div>
+    </div>
+</div>

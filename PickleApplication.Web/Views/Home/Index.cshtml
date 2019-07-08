@@ -1,0 +1,111 @@
+﻿@{
+    ViewBag.Title = "Ulus Turşucum";
+    IEnumerable<PickleApplication.BusinessLayer.Models.Product> products = (IEnumerable<PickleApplication.BusinessLayer.Models.Product>)ViewData["CarouselProducts"];
+}
+
+<div class="site-blocks-cover" style="background-image: url(../../Content/images/pickle-thumb.jpg);" data-aos="fade">
+    <div class="container">
+        <div class="row align-items-start align-items-md-center justify-content-end">
+            <div class="col-md-5 text-center text-md-left pt-5 pt-md-0">
+                <h1 class="mb-2 p-2">Kaliteli Üretim ve Kaliteli Hizmet</h1>
+                <div class="intro-text text-center text-md-left">
+                    <p class="mb-4 p-2">Fabrikamızda özenle hazırlanıp muhafaza edilen ürünlerimiz artık bir tık uzağınızda. </p>
+                    <p>
+                        <a href="@Url.Action("ProductList","Product")" class="btn btn-sm btn-primary">Alışverişa Başla</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="site-section site-blocks-2 hidden">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0" data-aos="fade" data-aos-delay="">
+                <a class="block-2-item" href="#">
+                    <figure class="image">
+                        <img src="~/Content/images/default.jpg" alt="" class="img-fluid">
+                    </figure>
+                    <div class="text">
+                        <span class="text-uppercase">Collections</span>
+                        <h3>Women</h3>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0" data-aos="fade" data-aos-delay="100">
+                <a class="block-2-item" href="#">
+                    <figure class="image">
+                        <img src="~/Content/images/default.jpg" alt="" class="img-fluid">
+                    </figure>
+                    <div class="text">
+                        <span class="text-uppercase">Collections</span>
+                        <h3>Children</h3>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0" data-aos="fade" data-aos-delay="200">
+                <a class="block-2-item" href="#">
+                    <figure class="image">
+                        <img src="~/Content/images/default.jpg" alt="" class="img-fluid">
+                    </figure>
+                    <div class="text">
+                        <span class="text-uppercase">Collections</span>
+                        <h3>Men</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="site-section block-3 site-blocks-2 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 site-section-heading text-center pt-4">
+                <h2>En Yeni Ürünler</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="nonloop-block-3 owl-carousel">
+                    @foreach (var product in products)
+                    {
+                        var picture = product.Pictures.Count() > 0 ? product.Pictures.FirstOrDefault() : null;
+                        <div class="item">
+                            <div class="block-4 text-center">
+                                <figure class="block-4-image">
+                                    <a href="@Url.Action("ProductDetail","Product", new { Id = product.ProductId })">
+                                        @if (picture != null)
+                                        {
+                                            <img src="/Content/images/default.jpg?width=350&height=250&mode=crop" data-original="/Content/Pictures/@string.Format("{0}{1}?width=350&height=250&mode=crop", picture.PictureId, picture.Extension)" alt="Image placeholder" class="img-fluid lazy">
+                                        }
+                                        else
+                                        {
+                                            <img src="/Content/images/default.jpg?width=350&height=250&mode=crop" alt="Image placeholder" class="img-fluid">
+                                        }
+                                    </a>
+                                </figure>
+                                <div class="block-4-text p-4">
+                                    <h3>@product.Title</h3>
+                                    <p class="mb-0">@product.Description</p>
+                                    <p class="text-primary font-weight-bold">@product.UnitPrice ₺</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("img.lazy").lazyload();
+        });
+    </script>
+}

@@ -1,0 +1,73 @@
+﻿@model IEnumerable<PickleApplication.BusinessLayer.Models.Product>
+@{
+    ViewBag.Title = "All";
+}
+
+@if (ViewBag.DeleteStatus != null)
+{
+    <div class="alert alert-@(ViewBag.DeleteStatus ? "success" : "danger") alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa @(ViewBag.DeleteStatus ? "fa-check" : "fa-ban")"></i> @(ViewBag.DeleteStatus ? "Başarılı" : "Hata!")</h4>
+        @(ViewBag.DeleteStatus ? "Ürün silme işlemi başarılı bir şekilde gerçekleşmiştir." : "Ürün silme sırasında bir hata oluştu!")
+    </div>
+}
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Ürünler</h3>
+                    <div class="box-tools pull-right">
+                        <a href="@Url.Action("Modify","AdmProduct")" class="btn btn-info"><i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Ürün Adı</th>
+                                <th>Ürün Kodu</th>
+                                <th>Başlık</th>
+                                <th>Kategori</th>
+                                <th>Stok</th>
+                                <th>Birim Fiyatı</th>
+                                <th>Resimler</th>
+                                <th>Düzenle</th>
+                                <th>Sil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model)
+                            {
+                                <tr>
+                                    <td>@product.ProductName</td>
+                                    <td>@product.ProductCode</td>
+                                    <td>@product.Title</td>
+                                    <td>@product.Link.Name</td>
+                                    <td>@product.Stock</td>
+                                    <td>@product.UnitPrice</td>
+                                    <td><a href="@Url.Action("Picture","AdmProduct", new { id = product.ProductId })" class="btn btn-info"><i class="fa fa-edit"></i></a></td>
+                                    <td><a href="@Url.Action("Modify","AdmProduct", new { id = product.ProductId })" class="btn btn-info"><i class="fa fa-edit"></i></a></td>
+                                    <td><a href="@Url.Action("Delete","AdmProduct", new { id = product.ProductId })" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('#example1').DataTable();
+        });
+    </script>
+}

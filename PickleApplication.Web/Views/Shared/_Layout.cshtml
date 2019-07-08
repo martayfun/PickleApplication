@@ -1,0 +1,141 @@
+﻿@using PickleApplication.BusinessLayer.Models;
+@using PickleApplication.BusinessLayer.Utils;
+@{
+    IEnumerable<Link> Categories = (IEnumerable<Link>)ViewData["Categories"];
+    IEnumerable<Link> Contents = (IEnumerable<Link>)ViewData["Contents"];
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+    <link rel="stylesheet" href="~/Content/shoppers/icomoon/style.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/shoppers/magnific-popup.css" />
+    <link rel="stylesheet" href="~/Content/shoppers/jquery-ui.css" />
+    <link rel="stylesheet" href="~/Content/shoppers/owl.carousel.min.css" />
+    <link rel="stylesheet" href="~/Content/shoppers/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="~/Content/shoppers/aos.css" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.3/animate.min.css'>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/Content/shoppers/style.css" />
+    <link rel="stylesheet" href="~/Content/Site.css" />
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+    </style>
+    @Styles.Render("~/Content/Css")
+    @RenderSection("css", required: false)
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body ng-app="PickleApplication" ng-cloak>
+    <div class="site-wrap">
+        <header class="site-navbar" role="banner">
+            <div class="site-navbar-top">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left">
+                            <form action="" class="site-block-top-search hidden">
+                                <span class="icon icon-search2"></span>
+                                <input type="text" class="form-control border-0" placeholder="Search">
+                            </form>
+                        </div>
+                        <div class="col-12 mb-3 mb-md-0 col-md-4 order-1 order-md-2 text-center">
+                            <div class="site-logo">
+                                <a href="@Url.Action("Index","Home")" class="js-logo-clone"><img src="~/Content/images/logo.png?width=100&height=100" class="img-responsive" /></a>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 order-3 order-md-3 text-right">
+                            <div class="site-top-icons">
+                                <ul>
+                                    <li><a href="#"><span class="icon icon-person hidden"></span></a></li>
+                                    <li><a href="#"><span class="icon icon-heart-o hidden"></span></a></li>
+                                    <li>
+                                        <a href="@Url.Action("ShoppingCard","Shopping")" class="site-cart">
+                                            <span class="icon icon-shopping_cart"></span>
+                                            <span class="count" data-ui-id="OrderLinesCount"></span>
+                                        </a>
+                                    </li>
+                                    <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="site-navigation text-right text-md-center" role="navigation">
+                <div class="container">
+                    <ul class="site-menu js-clone-nav d-none d-md-block">
+                        <li><a href="@Url.Action("Index","Home")">Anasayfa</a></li>
+                        <li class="has-children">
+                            <a href="#">Kategoriler</a>
+                            <ul class="dropdown">
+                                @foreach (var category in Categories)
+                                {
+                                    if (category.ParentId == 0)
+                                    {
+                                        if (Categories.FirstOrDefault(f => f.ParentId == category.LinkId) != null)
+                                        {
+                                            <li class="has-children">
+                                                <a href="~/urun-listesi/@category.LinkId">@category.Name</a>
+                                                <ul class="dropdown">
+                                                    @foreach (var childCategory in Categories.Where(f => f.ParentId == category.LinkId))
+                                                    {
+                                                        <li><a href="~/urun-listesi/@childCategory.LinkId">@childCategory.Name</a></li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="~/urun-listesi/@category.LinkId">@category.Name</a></li>
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </li>
+                        @foreach (var content in Contents)
+                        {
+                            <li><a href="~/icerik/@content.LinkId">@content.Name</a></li>
+                        }
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        @RenderBody()
+    </div>
+
+    <div id="loading">
+        <img id="loading-image" src="~/Content/loading.gif" alt="Loading..." />
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/shoppers/angular.min.js"></script>
+    <script src="~/Scripts/shoppers/jquery-ui.js"></script>
+    <script src="~/Scripts/umd/popper.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/shoppers/owl.carousel.min.js"></script>
+    <script src="~/Scripts/shoppers/jquery.magnific-popup.min.js"></script>
+    <script src="~/Scripts/shoppers/aos.js"></script>
+    <script src="~/Scripts/shoppers/bootstrap-notify.min.js"></script>
+    <script src="~/Scripts/shoppers/main.js"></script>
+    <script src="~/Scripts/shoppers/app/Common.js"></script>
+    <script src="~/Scripts/shoppers/jquery.lazyload.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            Common.ApiUrl = '@Common.GetDomainName()';
+        });
+        $(document).ready(function () {
+            Common.Layout.init();
+        });
+    </script>
+    @Scripts.Render("~/bundles/Js")
+    @Scripts.Render("~/bundles/sfCore")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

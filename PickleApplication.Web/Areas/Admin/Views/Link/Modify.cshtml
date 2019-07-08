@@ -1,0 +1,86 @@
+﻿@model PickleApplication.BusinessLayer.Models.Link
+@using PickleApplication.BusinessLayer.Models;
+
+@{
+    ViewBag.Title = "Modify";
+}
+
+<section class="content">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title">@(Model != null && Model.LinkId > 0 ? "Update" : "Add")</h3>
+        </div>
+        @using (Html.BeginForm("Modify", "Link", FormMethod.Post))
+        {
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        @if (Model != null && Model.LinkId > 0)
+                        {
+                            @Html.HiddenFor(l => l.LinkId)
+                        }
+                        <div class="form-group">
+                            <label>Link Adı</label>
+                            @Html.TextBoxFor(l => l.Name, new { @class = "form-control", type = "text" })
+                            @Html.ValidationMessageFor(l => l.Name)
+                        </div>
+                        <div class="form-group">
+                            <label>Açıklama</label>
+                            @Html.TextAreaFor(l => l.Description, new { @class = "form-control", row = "4", type = "text" })
+                            @Html.ValidationMessageFor(l => l.Description)
+                        </div>
+                        <div class="form-group">
+                            <label>Üst Link</label>
+                            @Html.DropDownListFor(l => l.ParentId, new SelectList(ViewBag.Links, "Key", "Value"), "None", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(l => l.Type)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Tipi</label>
+                            @Html.DropDownListFor(l => l.Type, new SelectList(EnumHelper.GetSelectList(typeof(MainType)), "Value", "Text"), "None", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(l => l.Type)
+                        </div>
+                        <div class="form-group">
+                            <label>Aktif</label><br />
+                            @Html.CheckBoxFor(l => l.IsActive, new { @class = "flat-red", type = "checkbox" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <input type="submit" class="btn btn-primary" value="@(Model != null && Model.LinkId > 0 ? "Update" : "Create")" />
+            </div>
+        }
+    </div>
+</section>
+
+@if (ViewBag.CreateStatus != null)
+{
+    <div class="alert alert-@(ViewBag.CreateStatus ? "success" : "danger") alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa @(ViewBag.CreateStatus ? "fa-check" : "fa-ban")"></i> @(ViewBag.CreateStatus ? "Başarılı" : "Hata!")</h4>
+        @(ViewBag.CreateStatus ? "Link oluşturma işlemi başarılı bir şekilde gerçekleşmiştir." : "Link oluşturma sırasında bir hata oluştu.")
+    </div>
+}
+
+@if (ViewBag.UpdateStatus != null)
+{
+    <div class="alert alert-@(ViewBag.UpdateStatus ? "success" : "danger") alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa @(ViewBag.UpdateStatus ? "fa-check" : "fa-ban")"></i> @(ViewBag.UpdateStatus ? "Başarılı" : "Hata!")</h4>
+        @(ViewBag.UpdateStatus ? "Link güncelleme işlemi başarılı bir şekilde gerçekleşmiştir." : "Link güncelleme sırasında bir hata oluştu.")
+    </div>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            //Flat red color scheme for iCheck
+            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+                checkboxClass: 'icheckbox_flat-green',
+                radioClass: 'iradio_flat-green'
+            });
+        });
+    </script>
+}

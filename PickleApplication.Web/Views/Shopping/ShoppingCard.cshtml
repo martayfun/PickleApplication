@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "Sepetim";
+}
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0"><a href="@Url.Action("Index","Home")">Anasayfa</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Sepetim</strong></div>
+        </div>
+    </div>
+</div>
+
+<div class="site-section" data-ui-id="ShoppingCard" ng-controller="ShoppingCardController">
+    <div class="container">
+        <div class="row mb-5" ng-if="isShoppingCardShow">
+            <form class="col-md-12" method="post">
+                <div class="site-blocks-table">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="product-thumbnail">Resim</th>
+                                <th class="product-name">Ürün</th>
+                                <th class="product-price">Fiyat</th>
+                                <th class="product-quantity">Miktar</th>
+                                <th class="product-total">Toplam Fiyat</th>
+                                <th class="product-remove">Sepetten Çıkar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="orderLine in OrderLines">
+                                <td class="product-thumbnail">
+                                    <img ng-if="orderLine.picture != null" src="/Content/images/default.jpg" data-original="/Content/Pictures/{{orderLine.picture.pictureId}}{{orderLine.picture.extension}}" alt="{{orderLine.product.productName}}" class="img-fluid lazy">
+                                    <img ng-if="orderLine.picture == null" src="/Content/images/default.jpg" alt="{{orderLine.product.productName}}" class="img-fluid">
+                                </td>
+                                <td class="product-name">
+                                    <h2 class="h5 text-black">{{orderLine.product.productName}}</h2>
+                                </td>
+                                <td>{{orderLine.product.unitPrice}} ₺</td>
+                                <td>
+                                    <div class="input-group mb-3" style="max-width: 120px;">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-primary js-btn-minus" type="button" ng-click="recalculate(orderLine,false)">&minus;</button>
+                                        </div>
+                                        <input type="text" class="form-control text-center" ng-model="orderLine.quantity" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-primary js-btn-plus" type="button" ng-click="recalculate(orderLine,true)">&plus;</button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{calculateOrderLineTotalPrice(orderLine)}} ₺</td>
+                                <td><a href="#" class="btn btn-primary btn-sm" ng-click="removeCardItem(orderLine.product.productId)"><i class="far fa-trash-alt fa-2x"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <div class="row" ng-if="isShoppingCardShow">
+            <div class="col-md-6">
+                <div class="row mb-5">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <button class="btn btn-primary btn-sm btn-block" ng-click="updateShoppingCard()">Sepeti Güncelle</button>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="@Url.Action("ProductList","Product")" class="btn btn-outline-primary btn-sm btn-block">Alışverişe Devam Et</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pl-5">
+                <div class="row justify-content-end">
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-md-12 text-right border-bottom mb-5">
+                                <h3 class="text-black h4 text-uppercase">Sepet Toplamı</h3>
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-md-6">
+                                <span class="text-black">Toplam</span>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <strong class="text-black">{{ShoppingCardTotalPrice}} ₺</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="@Url.Action("ShoppingDetail","Shopping")" class="btn btn-primary btn-lg py-3 btn-block">Alışverişi Tamamla</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-primary" ng-if="isShoppingCardAlertShow"><strong>Uyarı!</strong> Sepetinizde hiç ürün bulunmamaktadır.</div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Scripts/shoppers/app/ShoppingCard.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            ShoppingCard.init();
+        });
+        $(document).ready(function () {
+            ShoppingCard.load();
+            $("img.lazy").lazyload();
+
+        });
+    </script>
+}

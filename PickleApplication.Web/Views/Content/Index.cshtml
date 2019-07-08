@@ -1,0 +1,15 @@
+﻿@model PickleApplication.BusinessLayer.Models.Content
+@{
+    ViewBag.Title = Model != null ? Model.ContentTitle : "Hata";
+}
+
+<div class="container">
+    @if (Model != null)
+    {
+        @Html.Raw(Model.ContentEditorText)
+    }
+    else
+    {
+    <div class="alert alert-primary"><i class="fas fa-exclamation"></i> Lütfen yönetim panelinden içerik ekleyiniz</div>
+    }
+</div>
